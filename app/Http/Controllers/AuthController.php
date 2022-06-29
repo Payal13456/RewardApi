@@ -21,11 +21,14 @@ class AuthController extends Controller
     *            mediaType="multipart/form-data",
     *            @OA\Schema(
     *               type="object",
-    *               required={"name","email", "password", "password_confirmation"},
-    *               @OA\Property(property="name", type="text"),
+    *               required={"first_name","email",  "last_name","country_code","mobile_no",'gender','dob'},
+    *               @OA\Property(property="first_name", type="text"),
+    *				@OA\Property(property="last_name", type="text"),
+    *				@OA\Property(property="country_code", type="text"),
+    *				@OA\Property(property="mobile_no", type="text"),
     *               @OA\Property(property="email", type="text"),
-    *               @OA\Property(property="password", type="password"),
-    *               @OA\Property(property="password_confirmation", type="password")
+    *               @OA\Property(property="gender", type="text"),
+    *               @OA\Property(property="dob", type="date")
     *            ),
     *        ),
     *    ),
@@ -51,17 +54,29 @@ class AuthController extends Controller
   	public function register(Request $request)
   	{
       $validated = $request->validate([
-          'name' => 'required',
+          'first_name' => 'required',
+          'last_name' => 'required',
           'email' => 'required|email|unique:users',
-          'password' => 'required|confirmed',
-          'mobile_number' => 'required',
+          'mobile_no' => 'required',
+          'country_code' => 'required',
+          'gender' => 'required',
+          'dob' => 'required'
       ]);
 
-      $data = $request->all();
-      $data['password'] = Hash::make($data['password']);
+
+      $data = [
+      	'name' => $request->first_name,
+      	'last_name' => $request->last_name,
+      	'dob' => $request->dob,
+      	'email' => $request->email,
+      	'mobile_no' => $request->mobile_no,
+      	'country_code' => $request->country_code,
+      	'gender' => $request->gender
+      ];
+      $data['password'] = Hash::make($data['email']);
+      $data['unique_card'] = substr(number_format(time() * mt_rand(),0,'',''),0,16);
       $user = User::create($data);
       $success['token'] =  $user->createToken('authToken')->accessToken;
-      $success['name'] =  $user->name;
       return response()->json(['success' => 1, "message" => 'Register Successfully' , "data" =>$success])->setStatusCode(200);
   	}
 
@@ -164,7 +179,7 @@ class AuthController extends Controller
           'mobile_no' => 'required'
       ]);
 
-      if (!auth()->attempt($validator)) {
+      if (!auth()->attempt($		)) {
           return response()->json(['success' => 0, "message" => 'Unauthorised' , "data" =>[]])->setStatusCode(401);
       } else {
           $success['token'] = auth()->user()->createToken('authToken')->accessToken;

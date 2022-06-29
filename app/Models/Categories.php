@@ -25,5 +25,4 @@ class Categories extends Model
             return asset('public/uploads/dummy-banner.jpg');
         }
     }
-    
 }
