@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,8 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 
 
 	Route::middleware('auth:api')->group(function () {
+		Route::post('/update-profile' ,[UserController::class , 'updateProfile']);
+		Route::post('/list-plans' ,[UserController::class , 'listPlans']);
 		Route::post('/category-list' , [CategoryController::class , 'categoryList']);
 	});
 });

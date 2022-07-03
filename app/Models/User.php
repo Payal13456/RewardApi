@@ -28,7 +28,8 @@ class User extends Authenticatable
         'gender',
         'unique_card',
         'referal_code',
-        'password',
+        'password', 'emirates_id' , 'passport_no',
+        'passport_expiry','status','otp_status'
     ];
 
     /**
@@ -49,4 +50,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function information(){
+        return $this->hasOne(\App\Models\UserInformation::class);
+    }
 }
