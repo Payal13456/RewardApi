@@ -30,14 +30,13 @@ class AuthController extends Controller
       	'mobile_no' => $request->mobile_no,
       	'country_code' => $request->country_code,
       	'gender' => ucfirst($request->gender),
-        'referal_code' => ucfirst( substr(str_shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstvwxyz0123456789"), 0, 10)) 
+        'referal_code' => ucfirst( substr(str_shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstvwxyz0123456789"), 0, 10))
       ];
 
       $data['password'] = Hash::make($data['email']);
       $data['unique_card'] = substr(number_format(time() * mt_rand(),0,'',''),0,16);
       $user = User::create($data);
-      $token = explode('|',$user->createToken('authToken')->plainTextToken);
-      $success['token'] = $token[1];
+      $success['token'] = $user->createToken('Laravel Personal Access Client')->accessToken;
       $success['user'] = $user;
       return response()->json(['success' => 1, "message" => 'Register Successfully' , "data" =>$success])->setStatusCode(200);
   	}
@@ -53,8 +52,7 @@ class AuthController extends Controller
       if (!auth()->attempt($validator)) {
         return response()->json(['success' => 0, "message" => 'Unauthorised' , "data" =>[]])->setStatusCode(401);
       } else {
-          $token = explode('|', auth()->user()->createToken('authToken')->plainTextToken);
-          $success['token'] = $token[1];
+          $success['token'] =auth()->user()->createToken('Laravel Personal Access Client')->accessToken;
           $success['user'] = auth()->user();
           return response()->json(['success' => 1, "message" => 'Login Successfully' , "data" =>$success])->setStatusCode(200);
       }
@@ -74,8 +72,8 @@ class AuthController extends Controller
         if(!Auth::loginUsingId($user->id)){
            return response()->json(['success' => 0, "message" => 'User credentials doesn\'t match.' , "data" =>[]])->setStatusCode(401);
         } else {
-          $token = explode('|',$user->createToken('authToken')->plainTextToken);
-          $success['token'] = $token[1];
+          $success['token'] = $user->createToken('Laravel Personal Access Client')->accessToken;
+
           $success['user'] = $user;
           return response()->json(['success' => 1, "message" => 'Login Successfully!!' , "data" =>$success])->setStatusCode(200);
         }

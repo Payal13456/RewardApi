@@ -17,14 +17,15 @@ use App\Http\Controllers\CategoryController;
 |
 */
 
-Route::post('country-code' , [CommonController::class , 'countryCode']);
-Route::post('loginByMobileNumber', [AuthController::class , 'loginByMobileNumber']);
-Route::post('login', [AuthController::class , 'login']);
-Route::post('register', [AuthController::class , 'register']);
-Route::post('checkUser',[AuthController::class , 'checkUser']);
+Route::group(['middleware' => ['cors', 'json.response']], function () {
+	Route::post('country-code' , [CommonController::class , 'countryCode']);
+	Route::post('loginByMobileNumber', [AuthController::class , 'loginByMobileNumber']);
+	Route::post('login', [AuthController::class , 'login']);
+	Route::post('register', [AuthController::class , 'register']);
+	Route::post('checkUser',[AuthController::class , 'checkUser']);
 
-Route::post('category-list' , [CategoryController::class , 'categoryList']);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+	Route::middleware('auth:api')->group(function () {
+		Route::post('/category-list' , [CategoryController::class , 'categoryList']);
+	});
 });
