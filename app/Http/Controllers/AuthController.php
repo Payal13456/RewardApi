@@ -29,7 +29,8 @@ class AuthController extends Controller
       	'email' => ucfirst($request->email),
       	'mobile_no' => $request->mobile_no,
       	'country_code' => $request->country_code,
-      	'gender' => ucfirst($request->gender)
+      	'gender' => ucfirst($request->gender),
+        'referal_code' => ucfirst( substr(str_shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstvwxyz0123456789"), 0, 10)) 
       ];
 
       $data['password'] = Hash::make($data['email']);

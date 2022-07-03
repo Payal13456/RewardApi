@@ -27,6 +27,7 @@ class User extends Authenticatable
         'address',
         'gender',
         'unique_card',
+        'referal_code',
         'password',
     ];
 
