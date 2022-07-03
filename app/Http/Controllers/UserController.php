@@ -9,6 +9,56 @@ use App\Models\Plans;
 
 class UserController extends Controller
 {
+	 /**
+     * @OA\Post(
+     *      path="/api/update-profile",
+     *      operationId="updateProfile",
+     *      tags={"Authorized Users"},
+     *      security={{"bearer_token":{}}},
+     *      summary="Update Profile",
+     *      description="Update Profile after register",
+	 * 		@OA\RequestBody(
+	 *    required=true,
+	 *    description="Pass user credentials",
+	 *      @OA\JsonContent(
+	 *        required={"emirates_id","passport_no","passport_expiry","address_line1","address_line2","landmark","pincode","country","state","city"},
+	 *        @OA\Property(property="emirates_id", type="string", example="TYYTU987979"),
+	 *        @OA\Property(property="passport_no", type="string", example="678678786786"),
+	 *        @OA\Property(property="passport_expiry", type="date", example="2024-12-12"),
+	 *        @OA\Property(property="address_line1", type="string", example="Sayaji Hotel"),
+	 *        @OA\Property(property="address_line2", type="string", example="Vijay Nagar"),
+	 *        @OA\Property(property="landmark", type="string", example="Near C21 Mall"),
+	 *        @OA\Property(property="pincode", type="string", example="452011"),
+	 *        @OA\Property(property="country", type="string", example="India"),
+	 *        @OA\Property(property="state", type="string", example="MP"),
+	 *        @OA\Property(property="city", type="string", example="Indore"),
+	 *        ),
+   	 *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Profile updated successfully",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+     *  )
+     */
     public function updateProfile(Request $request){
     	$validated = $request->validate([
           'emirates_id' => 'required',
@@ -56,6 +106,40 @@ class UserController extends Controller
       		return response()->json(['success' => 0, "message" => 'Something went wrong!!' , "data" =>[]])->setStatusCode(200);
       	}
     }
+
+     /**
+     * @OA\Post(
+     *      path="/api/list-plans",
+     *      operationId="plansList",
+     *      tags={"Authorized Users"},
+     *      security={{"bearer_token":{}}},
+     *      summary="Pricing Plans list",
+     *      description="Pricing plans list",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Pricing plans",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+     *  )
+     */
 
     public function listPlans(Request $request){
     	$list = Plans::where('status',1)->get();

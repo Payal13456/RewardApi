@@ -1,146 +1,86 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Your super  ApplicationAPI",
+        "title": "Sectra Reward Api",
         "version": "1.0.0"
     },
     "paths": {
         "/api/register": {
             "post": {
                 "tags": [
-                    "Register"
+                    "Authentication"
                 ],
-                "summary": "User Register",
-                "description": "User Register here",
-                "operationId": "Register",
+                "summary": "Register Api",
+                "description": "App Registration",
+                "operationId": "authRegister",
                 "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
                     "content": {
-                        "multipart/form-data": {
+                        "application/json": {
                             "schema": {
                                 "required": [
-                                    "name",
+                                    "first_name",
+                                    "last_name",
                                     "email",
-                                    "password",
-                                    "password_confirmation"
+                                    "mobile_no",
+                                    "country_code",
+                                    "gender",
+                                    "dob"
                                 ],
                                 "properties": {
-                                    "name": {
-                                        "type": "text"
-                                    },
                                     "email": {
-                                        "type": "text"
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user1@mail.com"
                                     },
-                                    "password": {
-                                        "type": "password"
+                                    "first_name": {
+                                        "type": "string",
+                                        "example": "John"
                                     },
-                                    "password_confirmation": {
-                                        "type": "password"
+                                    "last_name": {
+                                        "type": "string",
+                                        "example": "Son"
+                                    },
+                                    "mobile_no": {
+                                        "type": "string",
+                                        "example": "1234567890"
+                                    },
+                                    "country_code": {
+                                        "type": "string",
+                                        "example": "+1"
+                                    },
+                                    "gender": {
+                                        "type": "string",
+                                        "example": "Male"
+                                    },
+                                    "dob": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2022-01-01"
                                     }
                                 },
                                 "type": "object"
                             }
-                        },
-                        "application/json": {
-                            "schema": {}
                         }
                     }
                 },
                 "responses": {
-                    "201": {
-                        "description": "Register Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "Register Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
                     "422": {
-                        "description": "Unprocessable Entity",
+                        "description": "Validation Error",
                         "content": {
                             "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request"
-                    },
-                    "404": {
-                        "description": "Resource Not Found"
-                    }
-                }
-            }
-        },
-        "/api/login": {
-            "post": {
-                "tags": [
-                    "Login"
-                ],
-                "summary": "User Login",
-                "description": "Login User Here",
-                "operationId": "authLogin",
-                "requestBody": {
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "required": [
-                                    "email",
-                                    "password"
-                                ],
-                                "properties": {
-                                    "email": {
-                                        "type": "email"
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation Error"
+                                        }
                                     },
-                                    "password": {
-                                        "type": "password"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        },
-                        "application/json": {
-                            "schema": {}
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Login Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
+                                    "type": "object"
+                                }
                             }
                         }
-                    },
-                    "200": {
-                        "description": "Login Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocessable Entity",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request"
-                    },
-                    "404": {
-                        "description": "Resource Not Found"
                     }
                 }
             }
@@ -148,65 +88,52 @@
         "/api/loginByMobileNumber": {
             "post": {
                 "tags": [
-                    "Login By Mobile Number"
+                    "Authentication"
                 ],
-                "summary": "Login By Mobile Number",
-                "description": "Login User Here by mobile number",
-                "operationId": "loginByMobileNumber",
+                "summary": "Login By MobileNumber",
+                "description": "Login by mobile number",
+                "operationId": "authLogin",
                 "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
                     "content": {
-                        "multipart/form-data": {
+                        "application/json": {
                             "schema": {
                                 "required": [
-                                    "mobile_no",
-                                    "country_code"
+                                    "country_code",
+                                    "mobile_no"
                                 ],
                                 "properties": {
-                                    "mobile_no": {
-                                        "type": "text"
-                                    },
                                     "country_code": {
-                                        "type": "text"
+                                        "type": "string",
+                                        "example": "+91"
+                                    },
+                                    "mobile_no": {
+                                        "type": "string",
+                                        "example": "8435153945"
                                     }
                                 },
                                 "type": "object"
                             }
-                        },
-                        "application/json": {
-                            "schema": {}
                         }
                     }
                 },
                 "responses": {
-                    "201": {
-                        "description": "Login Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "Login Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
                     "422": {
-                        "description": "Unprocessable Entity",
+                        "description": "Validation Error",
                         "content": {
                             "application/json": {
-                                "schema": {}
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation Error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
                             }
                         }
-                    },
-                    "400": {
-                        "description": "Bad request"
-                    },
-                    "404": {
-                        "description": "Resource Not Found"
                     }
                 }
             }
@@ -214,61 +141,52 @@
         "/api/checkUser": {
             "post": {
                 "tags": [
-                    "Check Mobile Number exist or not before registration"
+                    "Authentication"
                 ],
-                "summary": "Check User",
-                "description": "Check Mobile No Before registration",
+                "summary": "Check User MobileNumber",
+                "description": "Check User mobile number",
                 "operationId": "checkUser",
                 "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
                     "content": {
-                        "multipart/form-data": {
+                        "application/json": {
                             "schema": {
                                 "required": [
+                                    "country_code",
                                     "mobile_no"
                                 ],
                                 "properties": {
+                                    "country_code": {
+                                        "type": "string",
+                                        "example": "+91"
+                                    },
                                     "mobile_no": {
-                                        "type": "text"
+                                        "type": "string",
+                                        "example": "8435153945"
                                     }
                                 },
                                 "type": "object"
                             }
-                        },
-                        "application/json": {
-                            "schema": {}
                         }
                     }
                 },
                 "responses": {
-                    "201": {
-                        "description": "User Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "User Exist , Please login",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
                     "422": {
-                        "description": "Validation Failed",
+                        "description": "Validation Error",
                         "content": {
                             "application/json": {
-                                "schema": {}
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation Error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
                             }
                         }
-                    },
-                    "400": {
-                        "description": "Bad request"
-                    },
-                    "404": {
-                        "description": "Resource Not Found"
                     }
                 }
             }
@@ -276,127 +194,214 @@
         "/api/category-list": {
             "post": {
                 "tags": [
-                    "Category list"
+                    "Category"
                 ],
-                "summary": "Category List",
-                "description": "Category List",
-                "operationId": "category-list",
-                "requestBody": {
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "type": "object"
-                            }
-                        },
-                        "application/json": {
-                            "schema": {}
-                        }
-                    }
-                },
+                "summary": "Get list of category",
+                "description": "Returns list of category",
+                "operationId": "categoryList",
                 "responses": {
-                    "201": {
-                        "description": "Categories",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
                     "200": {
-                        "description": "Categories List",
+                        "description": "Category List",
                         "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
+                            "application/json": {}
                         }
                     },
-                    "422": {
-                        "description": "Validation Failed",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     },
                     "400": {
-                        "description": "Bad request"
+                        "description": "Bad Request"
                     },
                     "404": {
-                        "description": "Resource Not Found"
+                        "description": "not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
             }
         },
         "/api/country-code": {
             "post": {
                 "tags": [
-                    "Country Code list"
+                    "Authentication"
                 ],
-                "summary": "Country Code List",
-                "description": "Country Code List",
-                "operationId": "country-code",
+                "summary": "Country code list",
+                "description": "Country code list",
+                "operationId": "countryCode",
+                "responses": {
+                    "200": {
+                        "description": "Country code List",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                }
+            }
+        },
+        "/api/update-profile": {
+            "post": {
+                "tags": [
+                    "Authorized Users"
+                ],
+                "summary": "Update Profile",
+                "description": "Update Profile after register",
+                "operationId": "updateProfile",
                 "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
                     "content": {
-                        "multipart/form-data": {
+                        "application/json": {
                             "schema": {
+                                "required": [
+                                    "emirates_id",
+                                    "passport_no",
+                                    "passport_expiry",
+                                    "address_line1",
+                                    "address_line2",
+                                    "landmark",
+                                    "pincode",
+                                    "country",
+                                    "state",
+                                    "city"
+                                ],
+                                "properties": {
+                                    "emirates_id": {
+                                        "type": "string",
+                                        "example": "TYYTU987979"
+                                    },
+                                    "passport_no": {
+                                        "type": "string",
+                                        "example": "678678786786"
+                                    },
+                                    "passport_expiry": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-12-12"
+                                    },
+                                    "address_line1": {
+                                        "type": "string",
+                                        "example": "Sayaji Hotel"
+                                    },
+                                    "address_line2": {
+                                        "type": "string",
+                                        "example": "Vijay Nagar"
+                                    },
+                                    "landmark": {
+                                        "type": "string",
+                                        "example": "Near C21 Mall"
+                                    },
+                                    "pincode": {
+                                        "type": "string",
+                                        "example": "452011"
+                                    },
+                                    "country": {
+                                        "type": "string",
+                                        "example": "India"
+                                    },
+                                    "state": {
+                                        "type": "string",
+                                        "example": "MP"
+                                    },
+                                    "city": {
+                                        "type": "string",
+                                        "example": "Indore"
+                                    }
+                                },
                                 "type": "object"
                             }
-                        },
-                        "application/json": {
-                            "schema": {}
                         }
                     }
                 },
                 "responses": {
-                    "201": {
-                        "description": "Country Codes",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
                     "200": {
-                        "description": "Country Code List",
+                        "description": "Profile updated successfully",
                         "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
+                            "application/json": {}
                         }
                     },
-                    "422": {
-                        "description": "Validation Failed",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     },
                     "400": {
-                        "description": "Bad request"
+                        "description": "Bad Request"
                     },
                     "404": {
-                        "description": "Resource Not Found"
+                        "description": "not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/api/list-plans": {
+            "post": {
+                "tags": [
+                    "Authorized Users"
+                ],
+                "summary": "Pricing Plans list",
+                "description": "Pricing plans list",
+                "operationId": "plansList",
+                "responses": {
+                    "200": {
+                        "description": "Pricing plans",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
             }
         }
     },
     "components": {
+        "responses": {
+            "200": {
+                "description": "Register Successfully"
+            }
+        },
         "securitySchemes": {
-            "passport": {
-                "type": "oauth2",
-                "description": "Laravel passport oauth2 security.",
-                "in": "header",
-                "scheme": "https",
-                "flows": {
-                    "password": {
-                        "authorizationUrl": "http://localhost/oauth/authorize",
-                        "tokenUrl": "http://localhost/oauth/token",
-                        "refreshUrl": "http://localhost/token/refresh",
-                        "scopes": []
-                    }
-                }
+            "bearer_token": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "Authorization",
+                "in": "header"
             }
         }
     }
