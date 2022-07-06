@@ -25,4 +25,8 @@ class Categories extends Model
             return asset('public/uploads/dummy-banner.jpg');
         }
     }
+
+    public function vendor(){
+        return $this->hasMany(\App\Models\Vendors::class , 'category_id' , 'id');
+    }
 }

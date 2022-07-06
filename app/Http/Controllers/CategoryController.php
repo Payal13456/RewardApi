@@ -12,7 +12,6 @@ class CategoryController extends Controller
      *      path="/api/category-list",
      *      operationId="categoryList",
      *      tags={"Category"},
-     *      security={{"bearer_token":{}}},
      *      summary="Get list of category",
      *      description="Returns list of category",
      *      @OA\Response(
@@ -41,9 +40,12 @@ class CategoryController extends Controller
      *  )
      */
     public function categoryList(Request $request){
-		$list = Categories::all();
+		$list = Categories::with('vendor')->get();
 		foreach ($list as $key => $value) {
 			$value->image = env('WEB_URL' , 'http://localhost:8001/').'uploads/category/'.$value->image;
+               foreach($value->vendor as $vendor){
+                    $vendor->shop_logo = env('WEB_URL' , 'http://localhost:8001/').'uploads/category/'.$vendor->shop_logo;
+               }
 		}
 		return response()->json(['success' => 1, "message" => 'Categories List' , "data" =>$list])->setStatusCode(200);
 	}

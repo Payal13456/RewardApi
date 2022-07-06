@@ -13,4 +13,12 @@ class Vendors extends Model
     protected $fillable = [
         'name', 'phone_code','mobile_no', 'email', 'shop_name', 'website', 'description', 'category_id', 'location', 'lat', 'long', 'shop_logo', 'status', 'is_blocked'
     ];
+
+    public function category(){
+    	return $this->belongsTo(\App\Models\Categories::class);
+    }
+
+    public function offers(){
+    	return $this->hasMany(\App\Models\Offers::class , 'vendor_id' , 'id');
+    }
 }

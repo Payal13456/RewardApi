@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VendorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,11 +25,12 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 	Route::post('login', [AuthController::class , 'login']);
 	Route::post('register', [AuthController::class , 'register']);
 	Route::post('checkUser',[AuthController::class , 'checkUser']);
-
+	Route::post('/category-list' , [CategoryController::class , 'categoryList']);
+	
+	Route::post('/vendor-list',[VendorController::class , 'vendorList']);
 
 	Route::middleware('auth:api')->group(function () {
 		Route::post('/update-profile' ,[UserController::class , 'updateProfile']);
 		Route::post('/list-plans' ,[UserController::class , 'listPlans']);
-		Route::post('/category-list' , [CategoryController::class , 'categoryList']);
 	});
 });
