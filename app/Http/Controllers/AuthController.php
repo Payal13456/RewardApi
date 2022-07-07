@@ -76,19 +76,45 @@ class AuthController extends Controller
     return response()->json(['success' => 1, "message" => 'Register Successfully' , "data" =>$success])->setStatusCode(200);
 	}
 
+  public function sendOtp(Request $request){
+      $validator = $request->validate([
+        'email' => 'email|required'
+      ]);
+
+      // $otp = substr(number_format(time() * mt_rand(),0,'',''),0,6);
+      $otp = "1234";
+
+      if(User::where('email',$request->email)->first()){
+        User::where('email',$request->email)->update(['otp'=>$otp]);
+
+        // Mail code will come here
+
+        return response()->json(['success' => 1, "message" => 'Otp sent on '.$request->email , "data" =>$otp)->setStatusCode(200);
+      } else{
+        return response()->json(['success' => 0, "message" => 'User Not found!!' , "data" =>[]])->setStatusCode(401);
+      }
+  }
+
 	public function login(Request $request)
 	{
     $validator = $request->validate([
         'email' => 'email|required',
-        'password' => 'required'
+        'otp' => 'required'
     ]);
 
-    if (!auth()->attempt($validator)) {
-      return response()->json(['success' => 0, "message" => 'Unauthorised' , "data" =>[]])->setStatusCode(401);
-    } else {
-        $success['token'] =auth()->user()->createToken('Laravel Personal Access Client')->accessToken;
-        $success['user'] = auth()->user();
-        return response()->json(['success' => 1, "message" => 'Login Successfully' , "data" =>$success])->setStatusCode(200);
+    $user = User::where('email', $request->get('email'))->first();
+
+    if(!empty($user)){
+      if(!Auth::loginUsingId($user->id)){
+         return response()->json(['success' => 0, "message" => 'User credentials doesn\'t match.' , "data" =>[]])->setStatusCode(401);
+      } else {
+        $success['token'] = $user->createToken('Laravel Personal Access Client')->accessToken;
+
+        $success['user'] = $user;
+        return response()->json(['success' => 1, "message" => 'Login Successfully!!' , "data" =>$success])->setStatusCode(200);
+      }
+    }else{
+      return response()->json(['success' => 0, "message" => 'User Not found!!' , "data" =>[]])->setStatusCode(401);
     }
 	}
 

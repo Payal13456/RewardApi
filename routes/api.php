@@ -25,6 +25,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 	Route::post('login', [AuthController::class , 'login']);
 	Route::post('register', [AuthController::class , 'register']);
 	Route::post('checkUser',[AuthController::class , 'checkUser']);
+	Route::post('send-otp',[AuthController::class , 'sendOtp']);
 	Route::post('/category-list' , [CategoryController::class , 'categoryList']);
 	
 	Route::post('/vendor-list',[VendorController::class , 'vendorList']);
