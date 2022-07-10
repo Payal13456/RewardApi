@@ -7,6 +7,7 @@ use App\Http\Controllers\CommonController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,5 +34,8 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 	Route::middleware('auth:api')->group(function () {
 		Route::post('/update-profile' ,[UserController::class , 'updateProfile']);
 		Route::post('/list-plans' ,[UserController::class , 'listPlans']);
+		Route::post('/create-customer' ,[PaymentController::class , 'createCustomer']);
+		Route::post('/subscribe' ,[PaymentController::class , 'subscribe']);
+
 	});
 });

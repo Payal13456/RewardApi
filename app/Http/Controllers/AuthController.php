@@ -76,24 +76,6 @@ class AuthController extends Controller
     return response()->json(['success' => 1, "message" => 'Register Successfully' , "data" =>$success])->setStatusCode(200);
 	}
 
-  public function sendOtp(Request $request){
-      $validator = $request->validate([
-        'email' => 'email|required'
-      ]);
-
-      // $otp = substr(number_format(time() * mt_rand(),0,'',''),0,6);
-      $otp = "1234";
-
-      if(User::where('email',$request->email)->first()){
-        User::where('email',$request->email)->update(['otp'=>$otp]);
-
-        // Mail code will come here
-
-        return response()->json(['success' => 1, "message" => 'Otp sent on '.$request->email , "data" =>$otp)->setStatusCode(200);
-      } else{
-        return response()->json(['success' => 0, "message" => 'User Not found!!' , "data" =>[]])->setStatusCode(401);
-      }
-  }
 
 	public function login(Request $request)
 	{
@@ -204,8 +186,25 @@ class AuthController extends Controller
 	 	if(empty($user)){
 	 		return response()->json(['success' => 1, "message" => 'User Not found' , "data" =>[]])->setStatusCode(201);
 	 	}
-
 	 	return response()->json(['success' => 0, "message" => 'User Exist , Please login' , "data" =>$user])->setStatusCode(200);
+  }
 
+  public function sendOtp(Request $request){
+    $validator = $request->validate([
+      'email' => 'email|required'
+    ]);
+
+    // $otp = substr(number_format(time() * mt_rand(),0,'',''),0,6);
+    $otp = "1234";
+
+    if(User::where('email',$request->email)->first()){
+      User::where('email',$request->email)->update(['otp'=>$otp]);
+
+      // Mail code will come here
+
+      return response()->json(['success' => 1, "message" => 'Otp sent on '.$request->email , "data" =>$otp])->setStatusCode(200);
+    } else{
+      return response()->json(['success' => 0, "message" => 'User Not found!!' , "data" =>[]])->setStatusCode(401);
     }
+  }
 }

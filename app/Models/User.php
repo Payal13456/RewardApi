@@ -29,7 +29,7 @@ class User extends Authenticatable
         'unique_card',
         'referal_code',
         'password', 'emirates_id' , 'passport_no',
-        'passport_expiry','status','otp_status'
+        'passport_expiry','status','otp_status','customer_id'
     ];
 
     /**
