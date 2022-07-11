@@ -11,4 +11,8 @@ class Subscription extends Model
     
     protected $table = 'subscription';
     protected $fillable = ['user_id', 'plan_id', 'transaction_id', 'expiry_date', 'is_expired', 'status'];
+
+    public function plan(){
+        return $this->belongsTo(\App\Models\Plans::class);
+    }
 }

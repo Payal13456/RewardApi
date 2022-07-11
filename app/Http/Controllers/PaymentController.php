@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Stripe\Error\Card;
-use Cartalyst\Stripe\Stripe;
+use Stripe\Stripe;
+use Stripe\Charge;
 use App\Models\User;
+use App\Models\Subscription;
 
 class PaymentController extends Controller
 {
@@ -39,7 +41,17 @@ class PaymentController extends Controller
     			$stripe = new \Stripe\StripeClient(
 				  env('STRIPE_SECRET_KEY')
 				);
-    			$card_token = $request->token;
+
+				$token = $stripe->tokens->create([
+				  'card' => [
+				    'number' => '4242424242424242',
+				    'exp_month' => 7,
+				    'exp_year' => 2023,
+				    'cvc' => '314',
+				  ],
+				]);
+
+				$card_token = $token->id;
 
 				// Create customer
 				$customer = $stripe->customers->create([
@@ -48,29 +60,36 @@ class PaymentController extends Controller
 				  'phone' => $user->mobile_no,
 				  'description' => 'Sectra App User',
 				]);
-				$user->customer_id = $customer->id;
-				$user->save();
-
-				// save card details
-
-				$card_response = $stripe->customers->createSource(
-		          $customer->id,
-		          [
-		            'source' => $card_token
-		          ]
-		        );
-
-		        
+				
 				// Make payment
 
-				$subscribe = Stripe\Charge::create ([
+				$subscribe = $stripe->charges->create([
 	                "amount" => intval($request->amount) * 100,
 	                "currency" => "AED",
-	                "source" => $request->token,
+	                "source" => $card_token,
 	                "description" => "Sectra Plan"
 		        ]);
 
-		        return response()->json(['success' => 1, "message" => 'Subscribed Successfully!!' , "data" =>$subscribe])->setStatusCode(200);
+				$user->customer_id = $customer->id;
+		        $user->subscription_id = $subscribe->id;
+		        $user->save();
+
+		        $data = [
+		        	"user_id" => $request->user()->id,
+		        	"plan_id" => $request->plan_id,
+		        	"transaction_id" => "TR".substr(number_format(time() * mt_rand(),0,'',''),0,8),
+		        	"expiry_date" => date('Y-m-d', strtotime("+30 days")),
+		        	"is_expired" => 0,
+		        	"status" => 1,
+		        	"created_at" => date("Y-m-d H:i:s"),
+		        	"updated_at" => date("Y-m-d H:i:s")
+		        ];
+
+		        Subscription::create($data);
+
+		        $userinfo = User::with('subscription','subscription.plan')->where('id',$user->id)->first();
+
+		        return response()->json(['success' => 1, "message" => 'Subscribed Successfully!!' , "data" =>$userinfo])->setStatusCode(200);
     		// }
     	}
     }

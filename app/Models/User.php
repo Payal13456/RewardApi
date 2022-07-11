@@ -54,4 +54,7 @@ class User extends Authenticatable
     public function information(){
         return $this->hasOne(\App\Models\UserInformation::class);
     }
+    public function subscription(){
+        return $this->hasMany(\App\Models\Subscription::class);
+    }
 }
