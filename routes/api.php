@@ -7,6 +7,7 @@ use App\Http\Controllers\CommonController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\BankController;
 use App\Http\Controllers\PaymentController;
 
 /*
@@ -36,6 +37,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 		Route::post('/list-plans' ,[UserController::class , 'listPlans']);
 		Route::post('/create-customer' ,[PaymentController::class , 'createCustomer']);
 		Route::post('/subscribe' ,[PaymentController::class , 'subscribe']);
-
+		Route::post('/bank-list' ,[BankController::class , 'bankList']);
+		Route::post('/add-bank' ,[BankController::class , 'addBank']);
 	});
 });

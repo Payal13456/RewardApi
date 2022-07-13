@@ -84,7 +84,7 @@ class AuthController extends Controller
         'otp' => 'required'
     ]);
 
-    $user = User::where('email', $request->get('email'))->first();
+    $user = User::with('subscription')->where('email', $request->get('email'))->first();
 
     if(!empty($user)){
       if(!Auth::loginUsingId($user->id)){
@@ -132,7 +132,7 @@ class AuthController extends Controller
         'mobile_no' => 'required|regex:/[0-9]{10}/|digits:10'
     ]);
 
-    $user = User::where('mobile_no', $request->get('mobile_no'))->where('country_code',$request->country_code)->first();
+    $user = User::with('subscription')->where('mobile_no', $request->get('mobile_no'))->where('country_code',$request->country_code)->first();
 
     if(!empty($user)){
       if(!Auth::loginUsingId($user->id)){
@@ -181,7 +181,7 @@ class AuthController extends Controller
 
   	abort_if(!$validator , 422);
 
-	 	$user = User::where('mobile_no', $request->mobile_no)->where('country_code',$request->country_code)->first();
+	 	$user = User::with('subscription')->where('mobile_no', $request->mobile_no)->where('country_code',$request->country_code)->first();
 	 		
 	 	if(empty($user)){
 	 		return response()->json(['success' => 1, "message" => 'User Not found' , "data" =>[]])->setStatusCode(201);
