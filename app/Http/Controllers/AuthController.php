@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Hash;
 use App\Models\User;
+use App\Models\ReferalAmount;
+use App\Models\ReferalBonus;
 use Auth;
 
 class AuthController extends Controller
@@ -71,6 +73,26 @@ class AuthController extends Controller
     $data['password'] = Hash::make($data['email']);
     $data['unique_card'] = substr(number_format(time() * mt_rand(),0,'',''),0,16);
     $user = User::create($data);
+
+    if($request->referal_code){
+      $referal = User::where('referal_code', $request->referal_code)->first();
+    } 
+
+    $amount = ReferalAmount::where('status' , 1)->orderBy('id' , 'desc')->first();
+
+    if(isset($referal) && !empty($referal)){
+      $ref = [
+        "user_id" => $user->id,
+        "referal_code" => $referal->referal_code,
+        "amount" => !empty($amount) ? $amount->referral_amt : 50,
+        "ref_user_id" => $referal->id,
+        "status" => 0,
+        "created_at" => date('Y-m-d H:i:s'),
+        "updated_at" => date('Y-m-d H:i:s')
+      ];
+      ReferalBonus::insert($ref);
+    }
+
     $success['token'] = $user->createToken('Laravel Personal Access Client')->accessToken;
     $success['user'] = $user;
     return response()->json(['success' => 1, "message" => 'Register Successfully' , "data" =>$success])->setStatusCode(200);
@@ -85,15 +107,17 @@ class AuthController extends Controller
     ]);
 
     $user = User::with('subscription')->where('email', $request->get('email'))->first();
-
     if(!empty($user)){
-      if(!Auth::loginUsingId($user->id)){
-         return response()->json(['success' => 0, "message" => 'User credentials doesn\'t match.' , "data" =>[]])->setStatusCode(401);
-      } else {
-        $success['token'] = $user->createToken('Laravel Personal Access Client')->accessToken;
-
-        $success['user'] = $user;
-        return response()->json(['success' => 1, "message" => 'Login Successfully!!' , "data" =>$success])->setStatusCode(200);
+      if($user->otp == $request->get('otp')){
+        if(!Auth::loginUsingId($user->id)){
+           return response()->json(['success' => 0, "message" => 'User credentials doesn\'t match.' , "data" =>[]])->setStatusCode(401);
+        } else {
+          $success['token'] = $user->createToken('Laravel Personal Access Client')->accessToken;
+          $success['user'] = $user;
+          return response()->json(['success' => 1, "message" => 'Login Successfully!!' , "data" =>$success])->setStatusCode(200);
+        }
+      }else{
+        return response()->json(['success' => 0, "message" => 'Invalid Otp!' , "data" =>[]])->setStatusCode(200);
       }
     }else{
       return response()->json(['success' => 0, "message" => 'User Not found!!' , "data" =>[]])->setStatusCode(401);
