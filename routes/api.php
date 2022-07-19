@@ -33,6 +33,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 	Route::post('/vendor-list',[VendorController::class , 'vendorList']);
 
 	Route::middleware('auth:api')->group(function () {
+		Route::post('/update-basic-info' , [UserController::class , 'updateBasicInfo']);
 		Route::post('/update-profile' ,[UserController::class , 'updateProfile']);
 		Route::post('/list-plans' ,[UserController::class , 'listPlans']);
 		Route::post('/create-customer' ,[PaymentController::class , 'createCustomer']);

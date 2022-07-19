@@ -145,4 +145,33 @@ class UserController extends Controller
     	$list = Plans::where('status',1)->get();
     	return response()->json(['success' => 1, "message" => 'Pricing Plans' , "data" =>$list]	)->setStatusCode(200);
     }
+
+    public function updateBasicInfo(Request $request){
+      $validated = $request->validate([
+        'first_name' => 'required',
+        'last_name' => 'required',
+        'email' => 'required|email',
+        'mobile_no' => 'required',
+        'country_code' => 'required',
+        'gender' => 'required',
+        'dob' => 'required'
+      ]);
+
+      if($validated){
+        $data = [
+          'name' => ucfirst($request->first_name),
+          'last_name' => ucfirst($request->last_name),
+          'dob' => date('Y-m-d', strtotime($request->dob)),
+          'email' => ucfirst($request->email),
+          'mobile_no' => $request->mobile_no,
+          'country_code' => $request->country_code,
+          'gender' => ucfirst($request->gender)
+        ];
+         User::where('id' , $request->user()->id)->update($data);
+        $user =User::where('id' , $request->user()->id)->first();
+        return response()->json(['success' => 1, "message" => 'Profile Updated Successfully!!' , "data" =>$user]  )->setStatusCode(200);
+      } else{
+        return response()->json(['success' => 0, "message" => 'Something went wrong!!' , "data" =>[]])->setStatusCode(200);
+      }
+    }
 }
