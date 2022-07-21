@@ -10,6 +10,7 @@ use App\Http\Controllers\VendorController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\HelpController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 	Route::post('/vendor-list',[VendorController::class , 'vendorList']);
 
 	Route::middleware('auth:api')->group(function () {
+		Route::post('/notifications' ,[NotificationController::class , 'notificationList']);
 		Route::get('/vendor-details/{id}', [VendorController::class , 'vendirDetails']);
 		Route::get('/help/{category_id}', [HelpController::class , 'helpList']);
 		Route::get('/help-category', [HelpController::class , 'helpCategory']);
