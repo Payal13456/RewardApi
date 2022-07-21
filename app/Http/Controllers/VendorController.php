@@ -52,4 +52,18 @@ class VendorController extends Controller
 		}
 		return response()->json(['success' => 1, "message" => 'Vendors List' , "data" =>$list])->setStatusCode(200);
     }
+
+    public function vendirDetails($id){
+        $list = Vendors::with('category','offers','shop_cover_image','shop_email','shop_landline','shop_mobileno')->where('id',$id)->first();
+        if(!empty($list)){
+            if($list->shop_cover_image){
+                foreach ($list->shop_cover_image as $key => $value) {
+                    $value->cover_image = env('WEB_URL' , 'http://localhost:8001/').'uploads/category/'.$value->cover_image;
+                }
+            }
+            $list->shop_logo = env('WEB_URL' , 'http://localhost:8001/').'uploads/category/'.$list->shop_logo;
+            $list->category->image = env('WEB_URL' , 'http://localhost:8001/').'uploads/category/'.$list->image;
+        }
+        return response()->json(['success' => 1, "message" => 'Vendors Details' , "data" =>$list])->setStatusCode(200);
+    }
 }

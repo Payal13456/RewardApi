@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\HelpController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,10 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 	Route::post('/vendor-list',[VendorController::class , 'vendorList']);
 
 	Route::middleware('auth:api')->group(function () {
+		Route::get('/vendor-details/{id}', [VendorController::class , 'vendirDetails']);
+		Route::get('/help/{category_id}', [HelpController::class , 'helpList']);
+		Route::get('/help-category', [HelpController::class , 'helpCategory']);
+		Route::get('/subscription-history', [PaymentController::class , 'subscriptionHistory']);
 		Route::post('/update-basic-info' , [UserController::class , 'updateBasicInfo']);
 		Route::post('/update-profile' ,[UserController::class , 'updateProfile']);
 		Route::post('/list-plans' ,[UserController::class , 'listPlans']);
@@ -40,5 +45,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 		Route::post('/subscribe' ,[PaymentController::class , 'subscribe']);
 		Route::post('/bank-list' ,[BankController::class , 'bankList']);
 		Route::post('/add-bank' ,[BankController::class , 'addBank']);
+
+		Route::post('support', [UserController::class, 'addSupport']);
 	});
 });

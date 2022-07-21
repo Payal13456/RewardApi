@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\UserInformation;
 use App\Models\Plans;
+use App\Models\Feedback;
 
 class UserController extends Controller
 {
@@ -174,4 +175,29 @@ class UserController extends Controller
         return response()->json(['success' => 0, "message" => 'Something went wrong!!' , "data" =>[]])->setStatusCode(200);
       }
     }
+
+    public function addSupport(Request $request){
+      $validated = $request->validate([
+        'title' => 'required',
+        'description' => 'required'
+      ]);
+
+      // echo $request->user()->id;die;
+
+      if($validated){
+        $data = [
+          "title" => $request->title,
+          "description" => $request->description,
+          "user_id" => $request->user()->id
+        ];
+
+        Feedback::create($data);
+
+        return response()->json(['success' => 1, "message" => 'Thank You for reaching us , Our Support team will contact you soon.' , "data" =>[]]  )->setStatusCode(200);
+      }else{
+        return response()->json(['success' => 0, "message" => 'Something went wrong!!' , "data" =>[]])->setStatusCode(200);
+      }
+    }
 }
+
+
