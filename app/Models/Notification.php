@@ -15,6 +15,6 @@ class Notification extends Model
     ];
 
     public function user(){
-        return $this->belongsTo(\App\Models\User::class);
+        return $this->belongsTo(\App\Models\User::class)->select('name' , 'last_name','email','mobile_no','country_code');
     }
 }
