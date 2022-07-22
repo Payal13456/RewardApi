@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\UserInformation;
 use App\Models\Plans;
 use App\Models\Feedback;
+use App\Models\ReferalBonus;
 
 class UserController extends Controller
 {
@@ -197,6 +198,19 @@ class UserController extends Controller
       }else{
         return response()->json(['success' => 0, "message" => 'Something went wrong!!' , "data" =>[]])->setStatusCode(200);
       }
+    }
+
+    public function userinfo(Request $request){
+      $id = $request->user()->id;
+
+      $user = User::with('subscription','subscription.plan')->where('id',$id)->first();
+
+      $referal = ReferalBonus::where('ref_user_id',$id)->where('status',1 )->sum('amount');
+
+      $user->redeem_amount = $referal;
+      $user->courency = 'AED';
+
+      return response()->json(['success' => 1, "message" => 'User Details' , "data" =>$user])->setStatusCode(200);
     }
 }
 

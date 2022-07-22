@@ -10,6 +10,7 @@ use App\Http\Controllers\VendorController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\HelpController;
+use App\Http\Controllers\ReferalController;
 use App\Http\Controllers\NotificationController;
 
 /*
@@ -35,19 +36,38 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 	Route::post('/vendor-list',[VendorController::class , 'vendorList']);
 
 	Route::middleware('auth:api')->group(function () {
-		Route::post('/notifications' ,[NotificationController::class , 'notificationList']);
-		Route::get('/vendor-details/{id}', [VendorController::class , 'vendirDetails']);
+		
+		//Help
 		Route::get('/help/{category_id}', [HelpController::class , 'helpList']);
 		Route::get('/help-category', [HelpController::class , 'helpCategory']);
-		Route::get('/subscription-history', [PaymentController::class , 'subscriptionHistory']);
-		Route::post('/update-basic-info' , [UserController::class , 'updateBasicInfo']);
-		Route::post('/update-profile' ,[UserController::class , 'updateProfile']);
+		
+		// Notification
+		Route::post('/notifications' ,[NotificationController::class , 'notificationList']);
+
+		// Vendor
+		Route::get('/vendor-details/{id}', [VendorController::class , 'vendirDetails']);
+		
+		//Subscription
 		Route::post('/list-plans' ,[UserController::class , 'listPlans']);
 		Route::post('/create-customer' ,[PaymentController::class , 'createCustomer']);
 		Route::post('/subscribe' ,[PaymentController::class , 'subscribe']);
+		Route::get('/subscription-history', [PaymentController::class , 'subscriptionHistory']);
+		
+		//profile
+		Route::post('/user-info',[UserController::class , 'userinfo']);
+		Route::post('/update-basic-info' , [UserController::class , 'updateBasicInfo']);
+		Route::post('/update-profile' ,[UserController::class , 'updateProfile']);
+		
+		// Bank
 		Route::post('/bank-list' ,[BankController::class , 'bankList']);
 		Route::post('/add-bank' ,[BankController::class , 'addBank']);
 
+		// Support
 		Route::post('support', [UserController::class, 'addSupport']);
+
+		// Referal
+		Route::post('referal-history', [ReferalController::class, 'referalHistory']);		
+		Route::post('redeem-history', [ReferalController::class, 'redeemHistory']);		
+		Route::post('withdraw', [ReferalController::class, 'withdraw']);		
 	});
 });

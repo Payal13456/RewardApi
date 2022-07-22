@@ -71,7 +71,6 @@ class AuthController extends Controller
     ];
 
     $data['password'] = Hash::make($data['email']);
-    $data['unique_card'] = substr(number_format(time() * mt_rand(),0,'',''),0,16);
     $user = User::create($data);
 
     if($request->referal_code){

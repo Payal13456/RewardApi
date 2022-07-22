@@ -11,4 +11,8 @@ class ReferalBonus extends Model
 
     protected $table = 'referal_bonus';
     protected $fillable = ['user_id', 'referal_code', 'amount', 'ref_user_id', 'status'];
+
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class);
+    }
 }

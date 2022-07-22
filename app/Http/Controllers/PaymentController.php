@@ -8,6 +8,7 @@ use Stripe\Stripe;
 use Stripe\Charge;
 use App\Models\User;
 use App\Models\Subscription;
+use App\Models\ReferalBonus;
 
 class PaymentController extends Controller
 {
@@ -69,9 +70,10 @@ class PaymentController extends Controller
                 "source" => $card_token,
                 "description" => "Sectra Plan"
 	        ]);
-
+			$unique_card = substr(number_format(time() * mt_rand(),0,'',''),0,16);
 			$user->customer_id = $customer->id;
 	        $user->subscription_id = $subscribe->id;
+	        $user->unique_card = $unique_card;
 	        $user->save();
 
 	        $data = [
@@ -86,6 +88,8 @@ class PaymentController extends Controller
 	        ];
 
 	        Subscription::create($data);
+
+	        ReferalBonus::where('user_id',$request->user()->id)->update(['status' => 1]);
 
 	        $userinfo = User::with('subscription','subscription.plan')->where('id',$user->id)->first();
 
