@@ -8,6 +8,7 @@ use App\Models\UserInformation;
 use App\Models\Plans;
 use App\Models\Feedback;
 use App\Models\ReferalBonus;
+use App\Models\Redemption;
 
 class UserController extends Controller
 {
@@ -207,7 +208,9 @@ class UserController extends Controller
 
       $referal = ReferalBonus::where('ref_user_id',$id)->where('status',1 )->sum('amount');
 
-      $user->redeem_amount = $referal;
+      $redeem = Redemption::where('user_id' , $id)->where('is_approved' , '!=' , 2)->sum('amount');
+
+      $user->redeem_amount = $referal - $redeem;
       $user->courency = 'AED';
 
       return response()->json(['success' => 1, "message" => 'User Details' , "data" =>$user])->setStatusCode(200);

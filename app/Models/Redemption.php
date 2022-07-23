@@ -10,5 +10,5 @@ class Redemption extends Model
     use HasFactory;
 
     protected $table = 'redeem_req';
-    protected $fillable = ['user_id', 'is_approved', 'amount', 'status'];
+    protected $fillable = ['user_id', 'is_approved', 'amount', 'status',"bank_id"];
 }

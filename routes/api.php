@@ -66,8 +66,11 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 		Route::post('support', [UserController::class, 'addSupport']);
 
 		// Referal
-		Route::post('referal-history', [ReferalController::class, 'referalHistory']);		
+		Route::post('referal-history', [ReferalController::class, 'referalHistory']);
+
+		// Redeem request
 		Route::post('redeem-history', [ReferalController::class, 'redeemHistory']);		
-		Route::post('withdraw', [ReferalController::class, 'withdraw']);		
+		Route::post('redeem-request', [ReferalController::class, 'redeemRequest']);		
+		Route::post('cancel-redeem-request', [ReferalController::class, 'cancelRequest']);
 	});
 });
