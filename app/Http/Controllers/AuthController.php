@@ -67,8 +67,23 @@ class AuthController extends Controller
     	'mobile_no' => $request->mobile_no,
     	'country_code' => $request->country_code,
     	'gender' => ucfirst($request->gender),
-      'referal_code' => ucfirst( substr(str_shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstvwxyz0123456789"), 0, 10))
+      'referal_code' => ucfirst( substr(str_shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstvwxyz0123456789"), 0, 10)),
+      'fcm_token' => ($request->fcm_token) ? $request->fcm_token : NULL
     ];
+
+    if ($request->profile_image) {
+        $folderPath = "/uploads/";
+        $image_parts = explode(";base64,", $request->profile_image);
+        $image_type_aux = explode("image/", $image_parts[0]);
+        $image_type = $image_type_aux[1];
+        $image_base64 = base64_decode($image_parts[1]);
+        $imageName = uniqid() . '.'.$image_type;
+        $file = $folderPath . $imageName;
+        file_put_contents(public_path().$file, $image_base64);
+        $filename = url('/')."/uploads/".$imageName;
+        // echo $filename;die;
+        $data['profile_image'] = $filename;
+    }
 
     $data['password'] = Hash::make($data['email']);
     $user = User::create($data);
@@ -111,6 +126,8 @@ class AuthController extends Controller
         if(!Auth::loginUsingId($user->id)){
            return response()->json(['success' => 0, "message" => 'User credentials doesn\'t match.' , "data" =>[]])->setStatusCode(401);
         } else {
+          $user->fcm_token = ($request->fcm_token) ? $request->fcm_token : NULL;
+          $user->save();
           $success['token'] = $user->createToken('Laravel Personal Access Client')->accessToken;
           $success['user'] = $user;
           return response()->json(['success' => 1, "message" => 'Login Successfully!!' , "data" =>$success])->setStatusCode(200);
@@ -161,6 +178,9 @@ class AuthController extends Controller
       if(!Auth::loginUsingId($user->id)){
          return response()->json(['success' => 0, "message" => 'User credentials doesn\'t match.' , "data" =>[]])->setStatusCode(401);
       } else {
+        $user->fcm_token = ($request->fcm_token) ? $request->fcm_token : NULL;
+        $user->save();
+
         $success['token'] = $user->createToken('Laravel Personal Access Client')->accessToken;
 
         $success['user'] = $user;

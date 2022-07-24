@@ -24,10 +24,12 @@ class User extends Authenticatable
         'mobile_no',
         'country_code',
         'dob',
+        'fcm_token',
         'address',
         'gender',
         'unique_card',
         'referal_code',
+        "profile_image",
         'password', 'emirates_id' , 'passport_no',
         'passport_expiry','status','otp_status','customer_id'
     ];

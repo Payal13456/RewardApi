@@ -98,7 +98,22 @@ class UserController extends Controller
       			'country' => ucfirst($request->country)
       		];
 
-      		User::where('id' , $request->user()->id)->update($data);
+          User::where('id' , $request->user()->id)->update($data);
+
+          if ($request->profile_image) {
+            $folderPath = "/uploads/";
+            $image_parts = explode(";base64,", $request->profile_image);
+            $image_type_aux = explode("image/", $image_parts[0]);
+            $image_type = $image_type_aux[1];
+            $image_base64 = base64_decode($image_parts[1]);
+            $imageName = uniqid() . '.'.$image_type;
+            $file = $folderPath . $imageName;
+            file_put_contents(public_path().$file, $image_base64);
+            $filename = url('/')."/uploads/".$imageName;
+            // echo $filename;die;
+            $data['profile_image'] = $filename;
+            User::where('id' , $request->user()->id)->update(['profile_image'=>$filename]);
+          }
 
       		UserInformation::updateOrCreate(['user_id' => $request->user()->id],$info);
       		
@@ -171,6 +186,21 @@ class UserController extends Controller
           'gender' => ucfirst($request->gender)
         ];
          User::where('id' , $request->user()->id)->update($data);
+
+         if ($request->profile_image) {
+            $folderPath = "/uploads/";
+            $image_parts = explode(";base64,", $request->profile_image);
+            $image_type_aux = explode("image/", $image_parts[0]);
+            $image_type = $image_type_aux[1];
+            $image_base64 = base64_decode($image_parts[1]);
+            $imageName = uniqid() . '.'.$image_type;
+            $file = $folderPath . $imageName;
+            file_put_contents(public_path().$file, $image_base64);
+            $filename = url('/')."/uploads/".$imageName;
+            // echo $filename;die;
+            $data['profile_image'] = $filename;
+            User::where('id' , $request->user()->id)->update(['profile_image'=>$filename]);
+          }
         $user =User::where('id' , $request->user()->id)->first();
         return response()->json(['success' => 1, "message" => 'Profile Updated Successfully!!' , "data" =>$user]  )->setStatusCode(200);
       } else{

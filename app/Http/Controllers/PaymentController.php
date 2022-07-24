@@ -15,7 +15,7 @@ class PaymentController extends Controller
     public function createCustomer(Request $request){
     	if(!empty($request->user()->id)){
     		$user = User::find($request->user()->id);
-    		if($user->customer_id != null){
+    		if($user->customer_id == null){
 	    		$stripe = new \Stripe\StripeClient(
 				  env('STRIPE_SECRET_KEY')
 				);
@@ -27,7 +27,6 @@ class PaymentController extends Controller
 				]);
 				$user->customer_id = $customer->id;
 				$user->save();
-
 				return response()->json(['success' => 1, "message" => 'Stripe Customer Created Successfully!!' , "data" =>$user])->setStatusCode(200);
 			} else{
 				return response()->json(['success' => 0, "message" => 'Already having customer id!!' , "data" =>$user])->setStatusCode(200);
@@ -104,5 +103,30 @@ class PaymentController extends Controller
     	$subscription = Subscription::with('plan')->where('user_id' , $userid)->get();
 
     	return response()->json(['success' => 1, "message" => 'Subscribed History!!' , "data" =>$subscription])->setStatusCode(200);
+    }
+
+    public function createSubscription(Request $request){
+    	$stripe = new \Stripe\StripeClient(
+		  env('STRIPE_SECRET_KEY')
+		);
+		$customer_id = $request->customer_id;
+    	$subscription = $stripe->paymentIntents->create([
+		  'amount' => $request->amount,
+		  'currency' => 'AED',
+		  'payment_method_types' => ['card'],
+		]);
+		// echo '<pre>';print_r($subscription);die;
+	        // if(count($subscription) > 1){
+        //       $subscription = $subscription[0];
+        //   }
+        if($subscription->id != NULL){
+            $clientSecret = $subscription->client_secret;
+            $status= $subscription->status;
+        }else{
+            $clientSecret = "";
+            $status = '';
+        }
+	    
+	    return  response()->json(['success' => 1, "message" => 'subscription Created Successfully!!' , "data" =>['subscriptionId' => $subscription->id,'clientSecret'=>$clientSecret , "status" =>$status ]])->setStatusCode(200);
     }
 }

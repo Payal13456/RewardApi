@@ -50,6 +50,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 		//Subscription
 		Route::post('/list-plans' ,[UserController::class , 'listPlans']);
 		Route::post('/create-customer' ,[PaymentController::class , 'createCustomer']);
+		Route::post('/create-subscription' ,[PaymentController::class , 'createSubscription']);
 		Route::post('/subscribe' ,[PaymentController::class , 'subscribe']);
 		Route::get('/subscription-history', [PaymentController::class , 'subscriptionHistory']);
 		
