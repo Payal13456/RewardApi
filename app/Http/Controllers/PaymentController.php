@@ -37,49 +37,20 @@ class PaymentController extends Controller
     public function subscribe(Request $request){
     	if(!empty($request->user()->id)){
     		$user = User::find($request->user()->id);
-    		// if($user->customer_id != null){
-			$stripe = new \Stripe\StripeClient(
-			  env('STRIPE_SECRET_KEY')
-			);
-
-			$token = $stripe->tokens->create([
-			  'card' => [
-			    'number' => '4242424242424242',
-			    'exp_month' => 7,
-			    'exp_year' => 2023,
-			    'cvc' => '314',
-			  ],
-			]);
-
-			$card_token = $token->id;
-
-			// Create customer
-			$customer = $stripe->customers->create([
-			  'name' => $user->name." ".$user->last_name,
-			  'email' => $user->email,
-			  'phone' => $user->mobile_no,
-			  'description' => 'Sectra App User',
-			]);
-			
-			// Make payment
-
-			$subscribe = $stripe->charges->create([
-                "amount" => intval($request->amount) * 100,
-                "currency" => "AED",
-                "source" => $card_token,
-                "description" => "Sectra Plan"
-	        ]);
+    		
 			$unique_card = substr(number_format(time() * mt_rand(),0,'',''),0,16);
 			$user->customer_id = $customer->id;
 	        $user->subscription_id = $subscribe->id;
 	        $user->unique_card = $unique_card;
 	        $user->save();
 
+	        $plan = Plan::find($request->plan_id);
+
 	        $data = [
 	        	"user_id" => $request->user()->id,
 	        	"plan_id" => $request->plan_id,
 	        	"transaction_id" => "TR".substr(number_format(time() * mt_rand(),0,'',''),0,8),
-	        	"expiry_date" => date('Y-m-d', strtotime("+30 days")),
+	        	"expiry_date" => date('Y-m-d', strtotime($plan->validity." days")),
 	        	"is_expired" => 0,
 	        	"status" => 1,
 	        	"created_at" => date("Y-m-d H:i:s"),
@@ -93,7 +64,6 @@ class PaymentController extends Controller
 	        $userinfo = User::with('subscription','subscription.plan')->where('id',$user->id)->first();
 
 	        return response()->json(['success' => 1, "message" => 'Subscribed Successfully!!' , "data" =>$userinfo])->setStatusCode(200);
-    		// }
     	}
     }
 
